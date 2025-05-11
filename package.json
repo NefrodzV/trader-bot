@@ -1,0 +1,31 @@
+{
+  "name": "trader-bot",
+  "version": "1.0.0",
+  "description": "\"Project about making a trader bot\"",
+  "main": "bot.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NefrodzV/trader-bot.git"
+  },
+  "author": "Neftaly Rodriguez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NefrodzV/trader-bot/issues"
+  },
+  "homepage": "https://github.com/NefrodzV/trader-bot#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "node-cron": "^4.0.0",
+    "nodemailer": "^7.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^9.26.0",
+    "nodemon": "^3.1.10",
+    "prettier": "3.5.3"
+  }
+}
