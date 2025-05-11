@@ -1,6 +1,6 @@
 # Trader Bot
 
-A Node.js that monitors Binance data and sends notifications when certian conditions are met.
+A Node.js that monitors Binance data and sends notifications when certain conditions are met.
 
 ## 1. 🚀 Features
 
