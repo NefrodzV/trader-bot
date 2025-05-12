@@ -35,7 +35,7 @@ const viewData = async () => {
         //     },
         //     process.env.EMAIL
         // )
-        console.log('Data is: ', data)
+        console.log('Data is: ')
     } catch (error) {
         console.error('Binance GET request price error: ', error)
     }
@@ -75,5 +75,5 @@ function throwError({ errorType = Error, message = 'An error has occurred' }) {
 }
 
 await viewData()
-setInterval(() => console.log('Worker running'))
+// setInterval(() => console.log('Worker running'))
 // cron.schedule('* * * * * *', () => console.log('Running every second'))
