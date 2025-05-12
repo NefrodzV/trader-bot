@@ -25,16 +25,17 @@ const viewData = async () => {
     try {
         const response = await fetch(apiUrl)
         const data = await response.json()
-        sendEmail(
-            {
-                from: 'Bot Trader',
-                subject: 'Some condition has been met',
-                text:
-                    'Hey here this text from the condition met ' +
-                    JSON.stringify(data),
-            },
-            process.env.EMAIL
-        )
+        // sendEmail(
+        //     {
+        //         from: 'Bot Trader',
+        //         subject: 'Some condition has been met',
+        //         text:
+        //             'Hey here this text from the condition met ' +
+        //             JSON.stringify(data),
+        //     },
+        //     process.env.EMAIL
+        // )
+        console.log('Data is: ', data)
     } catch (error) {
         console.error('Binance GET request price error: ', error)
     }
