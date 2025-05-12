@@ -35,7 +35,7 @@ const viewData = async () => {
         //     },
         //     process.env.EMAIL
         // )
-        console.log('Data is: ')
+        console.log('Data is: ' + JSON.stringify(data))
     } catch (error) {
         console.error('Binance GET request price error: ', error)
     }
