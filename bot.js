@@ -35,7 +35,6 @@ const viewData = async () => {
             },
             process.env.EMAIL
         )
-        console.log('Data was ')
     } catch (error) {
         console.error('Binance GET request price error: ', error)
     }
@@ -56,7 +55,7 @@ const sendEmail = async (message, emailRecipient) => {
     if (!message.hasOwnProperty('from'))
         throwError({ message: 'Message from must be defined' })
 
-    const { from, text, subject } = message
+    const { text, subject } = message
 
     try {
         await transporter.verify()
