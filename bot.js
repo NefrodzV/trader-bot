@@ -74,4 +74,5 @@ function throwError({ errorType = Error, message = 'An error has occurred' }) {
 }
 
 await viewData()
-cron.schedule('* * * * * *', () => console.log('Running every second'))
+setInterval(() => console.log('Worker running'))
+// cron.schedule('* * * * * *', () => console.log('Running every second'))
