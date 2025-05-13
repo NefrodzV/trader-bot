@@ -21,7 +21,7 @@ const transporter = nodeMailer.createTransport({
     },
 })
 // ** Function to lookup data from binance  **/
-const viewData = async () => {
+async function viewData() {
     try {
         const response = await fetch(apiUrl)
         const data = await response.json()
@@ -46,7 +46,7 @@ const viewData = async () => {
  * @param {{text:string, subject: string, from:string}} message - The email content.
  * @param {string} user - The recipient's email address.
  */
-const sendEmail = async (message, emailRecipient) => {
+async function sendEmail(message, emailRecipient) {
     if (typeof message !== 'object')
         throwError({ message: 'Message must be a object' })
     if (!message.hasOwnProperty('text'))
@@ -74,6 +74,28 @@ function throwError({ errorType = Error, message = 'An error has occurred' }) {
     throw new errorType(message)
 }
 
-await viewData()
-// setInterval(() => console.log('Worker running'))
-// cron.schedule('* * * * * *', () => console.log('Running every second'))
+export function calculateSMA({ period = 0, prices = [] }) {
+    if (period === 0)
+        throwError({
+            message: 'Period must be defined right now tis values is: ' + 0,
+        })
+    if (!Array.isArray(prices))
+        throwError({ message: 'Prices must be an array' })
+    if (prices.length === 0) throwError({ message: 'Prices array is empty' })
+
+    if (prices.length < period)
+        throwError({ message: 'Not enough prices to calculate SMA' })
+    //Calculate with all
+    const lastestSMA =
+        prices.reduce((accumalator, value) => accumalator + value, 0) / period
+
+    // Calculate without the last one
+    const previousSMA =
+        prices.slice(0, prices.length - 1).reduce((acc, val) => acc + val, 0) /
+        (period - 1)
+
+    return {
+        previousSMA,
+        lastestSMA,
+    }
+}
