@@ -2,6 +2,7 @@ import { configDotenv } from 'dotenv'
 import cron from 'node-cron'
 import nodeMailer from 'nodemailer'
 import crypto from 'crypto'
+globalThis.crypto = crypto
 configDotenv()
 // Symbols that the bot will look for
 const symbols = ['BTCUSD', 'ETHUSD', 'XRPUSD']
