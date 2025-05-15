@@ -5,9 +5,9 @@ import crypto from 'crypto'
 globalThis.crypto = crypto
 configDotenv()
 // Symbols that the bot will look for
-const symbols = ['BTCUSD', 'ETHUSD', 'XRPUSD']
+const coins = ['bitcoin', 'ethereum', 'ripple']
 // Binance endpoint
-const apiUrl = `https://api.binance.us/api/v3/ticker/price?symbol=BTCUSD`
+const apiUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${coint.join(',')}&vs_currencies=usd`
 
 // Setup mail transporter
 const transporter = nodeMailer.createTransport({
@@ -77,4 +77,4 @@ async function lookForCoin(name) {
         console.error('Error looking for coin', error)
     }
 }
-cron.schedule('* * * * * *', viewData)
+cron.schedule('* * * * *', viewData)
