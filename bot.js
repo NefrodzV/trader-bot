@@ -3,12 +3,9 @@ import cron from 'node-cron'
 import nodeMailer from 'nodemailer'
 configDotenv()
 // Symbols that the bot will look for
-const symbols = {
-    bitcoin: 'BTCUSDT',
-    xrp: 'XRPUSDT',
-}
+const coins = ['bitcoin', 'ethereum', 'ripple']
 // Binance endpoint
-const apiUrl = `https://api.binance.com/api/v3/ticker/price?symbol=${symbols.xrp}`
+const apiUrl = `https://api.binance.us/api/v3/ticker/price?symbol=BTCUSD`
 
 // Setup mail transporter
 const transporter = nodeMailer.createTransport({
@@ -25,16 +22,7 @@ async function viewData() {
     try {
         const response = await fetch(apiUrl)
         const data = await response.json()
-        // sendEmail(
-        //     {
-        //         from: 'Bot Trader',
-        //         subject: 'Some condition has been met',
-        //         text:
-        //             'Hey here this text from the condition met ' +
-        //             JSON.stringify(data),
-        //     },
-        //     process.env.EMAIL
-        // )
+
         console.log('Data is: ' + JSON.stringify(data))
     } catch (error) {
         console.error('Binance GET request price error: ', error)
@@ -74,28 +62,17 @@ function throwError({ errorType = Error, message = 'An error has occurred' }) {
     throw new errorType(message)
 }
 
-export function calculateSMA({ period = 0, prices = [] }) {
-    if (period === 0)
-        throwError({
-            message: 'Period must be defined right now tis values is: ' + 0,
+async function lookForCoin(name) {
+    try {
+        const response = await fetch(
+            'https://api.coingecko.com/api/v3/coins/list'
+        )
+        const data = await response.json()
+        data.forEach((coinData) => {
+            if (coinData.symbol === name) console.log(coinData)
         })
-    if (!Array.isArray(prices))
-        throwError({ message: 'Prices must be an array' })
-    if (prices.length === 0) throwError({ message: 'Prices array is empty' })
-
-    if (prices.length < period)
-        throwError({ message: 'Not enough prices to calculate SMA' })
-    //Calculate with all
-    const lastestSMA =
-        prices.reduce((accumalator, value) => accumalator + value, 0) / period
-
-    // Calculate without the last one
-    const previousSMA =
-        prices.slice(0, prices.length - 1).reduce((acc, val) => acc + val, 0) /
-        (period - 1)
-
-    return {
-        previousSMA,
-        lastestSMA,
+    } catch (error) {
+        console.error('Error looking for coin', error)
     }
 }
+viewData()
