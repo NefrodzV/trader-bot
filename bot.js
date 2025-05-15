@@ -7,7 +7,7 @@ configDotenv()
 // Symbols that the bot will look for
 const coins = ['bitcoin', 'ethereum', 'ripple']
 // Binance endpoint
-const apiUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${coint.join(',')}&vs_currencies=usd`
+const apiUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(',')}&vs_currencies=usd`
 
 // Setup mail transporter
 const transporter = nodeMailer.createTransport({
