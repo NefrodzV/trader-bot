@@ -3,7 +3,7 @@ import cron from 'node-cron'
 import nodeMailer from 'nodemailer'
 configDotenv()
 // Symbols that the bot will look for
-const coins = ['bitcoin', 'ethereum', 'ripple']
+const symbols = ['BTCUSD', 'ETHUSD', 'XRPUSD']
 // Binance endpoint
 const apiUrl = `https://api.binance.us/api/v3/ticker/price?symbol=BTCUSD`
 
@@ -75,4 +75,4 @@ async function lookForCoin(name) {
         console.error('Error looking for coin', error)
     }
 }
-viewData()
+cron.schedule('* * * * * *', viewData)
