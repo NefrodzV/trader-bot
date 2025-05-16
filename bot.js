@@ -78,3 +78,4 @@ async function lookForCoin(name) {
     }
 }
 cron.schedule('* * * * *', viewData)
+setInterval(()=>{ console.log("Bot proccess running");}, 1000)
