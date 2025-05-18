@@ -1,8 +1,5 @@
 import { configDotenv } from 'dotenv'
-import cron from 'node-cron'
 import nodeMailer from 'nodemailer'
-import crypto from 'crypto'
-globalThis.crypto = crypto
 configDotenv()
 // Symbols that the bot will look for
 const coins = ['bitcoin', 'ethereum', 'ripple']
@@ -16,21 +13,55 @@ const transporter = nodeMailer.createTransport({
     secure: false,
     auth: {
         user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
+        pass: process.env.EMAIL_APP_PASSWORD,
     },
 })
-// ** Function to lookup data from binance  **/
-async function viewData() {
+
+async function getCoinPrices(coins) {
+    const coinIds = Array.isArray(coins) ? coins.join(',') : coins
+    const apiUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=usd`
     try {
         const response = await fetch(apiUrl)
         const data = await response.json()
-
-        console.log('Data is: ' + JSON.stringify(data))
+        return data
     } catch (error) {
-        console.error('Binance GET request price error: ', error)
+        console.error('[GET] Coin prices error : ', error)
+        return null
     }
 }
 
+async function viewData(coins, email, conditions) {
+    if (!coins) throwError({ message: 'Coins must be defined' })
+    if (Array.isArray(coins) && coins.length === 0)
+        throwError('Coins array is empty')
+    try {
+        const data = await getCoinPrices(coins)
+        if (!email) throwError({ message: 'Email must be defined' })
+        // No conditions are set just send information about the coins
+
+        if (!conditions) {
+            console.log('Sending email')
+            return await sendEmail(
+                {
+                    from: 'Crypto Price Information',
+                    subject: 'Crypto Price Information',
+                    text: formatData(data),
+                },
+                email
+            )
+        }
+    } catch (error) {
+        console.error('View data error : ', error)
+    }
+}
+
+function formatData(data) {
+    const substringArray = [`Current prices : \n`]
+    for (const [key, value] of Object.entries(data)) {
+        substringArray.push(`[${key.toUpperCase()}] : ${value.usd} USD \n`)
+    }
+    return substringArray.join('')
+}
 /**
  *
  * @param {{text:string, subject: string, from:string}} message - The email content.
@@ -43,8 +74,8 @@ async function sendEmail(message, emailRecipient) {
         throwError({ message: 'Message text must be defined' })
     if (!message.hasOwnProperty('subject'))
         throwError({ message: 'Message subject must be defined' })
-    if (!message.hasOwnProperty('from'))
-        throwError({ message: 'Message from must be defined' })
+    // if (!message.hasOwnProperty('from'))
+    //     throwError({ message: 'Message from must be defined' })
 
     const { text, subject } = message
 
@@ -55,6 +86,7 @@ async function sendEmail(message, emailRecipient) {
             subject: subject,
             text: text,
         })
+        console.log('Email sent')
     } catch (error) {
         console.error('Nodemailer error:', error)
     }
@@ -64,18 +96,4 @@ function throwError({ errorType = Error, message = 'An error has occurred' }) {
     throw new errorType(message)
 }
 
-async function lookForCoin(name) {
-    try {
-        const response = await fetch(
-            'https://api.coingecko.com/api/v3/coins/list'
-        )
-        const data = await response.json()
-        data.forEach((coinData) => {
-            if (coinData.symbol === name) console.log(coinData)
-        })
-    } catch (error) {
-        console.error('Error looking for coin', error)
-    }
-}
-cron.schedule('* * * * *', viewData)
-setInterval(()=>{ console.log("Bot proccess running");}, 1000)
+console.log('Worker ran at', new Date().toISOString())
